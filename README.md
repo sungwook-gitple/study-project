@@ -2,10 +2,10 @@
 
 ### SPEC
 
-NODE 10.24.1
-YARN 1.22.10
-MONGODB 4.2
-mongoose 5.5.23
+NODE 10.24.1  
+YARN 1.22.10  
+MONGODB 4.2  
+mongoose 5.5.23  
 node-restful 0.2.6
 
 ### INSTALL
