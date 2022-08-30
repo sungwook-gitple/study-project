@@ -1,7 +1,7 @@
 import app from '../app';
 
-import { chattingSchema } from '@/db/model/chatting';
 import restful from 'node-restful';
+import { chattingSchema } from '../db/model/chatting';
 
 export default function routeChatting() {
 
