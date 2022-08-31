@@ -1,7 +1,8 @@
+import { Request, Response } from 'express';
 import passport from 'passport';
 import { ExtractJwt, Strategy as JwtStrategy } from 'passport-jwt';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { UserModel } from '../db/model/user';
+import { User, UserModel } from '../db/model/user';
 
 export function configPassport() {
 
@@ -11,8 +12,6 @@ export function configPassport() {
     issuer: 'accounts.examplesoft.com',
     audience: 'yoursite.net',
   };
-
-  opts.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 
   passport.use(new JwtStrategy(
     opts,
@@ -33,18 +32,33 @@ export function configPassport() {
 
   passport.use(new LocalStrategy(
     function(username, password, done) {
-      console.log('=== local', username, password);
-      const existedUser = UserModel.findOne({ username, password });
-
-      if (!existedUser) {
-        done(null, false);
-      }
-
-      done(null, existedUser);
+      UserModel.findOne({ username, password })
+        .then((existedUser: User | null) => {
+          if (!existedUser) {
+            done(null, false);
+          }
+          done(null, existedUser);
+        }).catch((e: Error) => {
+          console.error(e);
+          done(null, false);
+        });
 
       return;
     }
   ));
+}
 
-  console.log('=== passport configured');
+export function signIn<T> (req: Request<T>, res: Response) {
+
+  return passport.authenticate('local', { session: false }, (err, user) => {
+
+    if (err) {
+      throw new Error('Unathorized');
+    }
+    if (!user) {
+      throw new Error('not founded');
+    }
+
+    return 'success';
+  });
 }
