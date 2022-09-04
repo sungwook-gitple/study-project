@@ -1,4 +1,4 @@
-export function checkRequired(params: Record<string, any>, required: string[]) {
+export function checkRequired<T = Record<string, any>>(params: T, required: (keyof T)[]) {
   const missed = required.filter(key => !params[key]);
 
   if (missed.length) {
@@ -11,5 +11,29 @@ export function checkRequired(params: Record<string, any>, required: string[]) {
 
   return {
     result: 'success'
+  };
+}
+
+export function validateRequired<T = Record<string, any>>(params: T, required: (keyof T)[]): {
+  result: 'fail'
+  message: string
+  missed: (keyof T)[]
+} | {
+  result: 'success'
+  data: T
+} {
+  const missed = required.filter(key => !params[key]);
+
+  if (missed.length) {
+    return {
+      result: 'fail',
+      message: 'required',
+      missed,
+    };
+  }
+
+  return {
+    result: 'success',
+    data: params
   };
 }

@@ -11,7 +11,7 @@ export function authorize (role?: string) {
   }
   return (req: Request, res: Response, next: NextFunction) => {
 
-    return passport.authenticate(
+    passport.authenticate(
       'jwt',
       { session: false },
       (err, user) => {
@@ -24,6 +24,7 @@ export function authorize (role?: string) {
           return;
         }
 
+        req.user = user;
         next();
       }
     )(req, res);

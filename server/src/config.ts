@@ -6,6 +6,7 @@ if (!process.env.JWT_SECRET) {
 
 export const config = {
   server: {
+    HOST: process.env.SERVER_HOST || 'localhost',
     PORT: process.env.SERVER_PORT || 3000,
     JWT_SECRET: process.env.JWT_SECRET,
   },

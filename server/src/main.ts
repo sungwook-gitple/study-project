@@ -1,19 +1,17 @@
-import app from './app';
 import { configPassport } from './components/auth/passport';
-import { loadChattingSubscriber } from './loader/loadChattingSubscriber';
+import { chattingMqtt } from './components/chatting';
 import { loadDb } from './loader/loadDb';
 import { loadServer } from './loader/loadServer';
-import { route } from './route';
+import { registerRouter } from './route';
 
 async function startServer () {
 
-  console.log('aa', app);
   await loadDb();
   configPassport();
-  route();
+  registerRouter();
 
   await loadServer();
-  await loadChattingSubscriber();
+  chattingMqtt.connect();
 }
 
 startServer();

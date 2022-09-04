@@ -1,25 +1,52 @@
 import app from '@/src/app';
-import { chattingSchema } from '@/src/db/model/chatting';
+import { chattingMqtt } from '@/src/components/chatting';
 import { authorize } from '@/src/middleware/authorization';
-import { chattingMqtt } from '@/src/mqtt';
-import restful from 'node-restful';
+import { validateRequired } from '@/src/util/validation/requestValidation';
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import { CHATTING_TOPIC } from './constants';
+import { Chatting } from './types';
 
 export function routeChatting() {
 
-  const Chatting = restful.model('chatting', chattingSchema)
-    .methods(['get', 'post', 'put', 'delete']);
+  // const Chatting = restful.model('chatting', chattingSchema)
+  //   .methods(['get', 'post', 'put', 'delete']);
 
-  Chatting.before('', authorize());
-  Chatting.register(app, '/chatting');
+  // Chatting.before('', authorize());
+  // Chatting.register(app, '/chatting');
 
   app.get('/chatting/unsubscribe', (req, res) => {
-    console.log('=== unsub');
+
     chattingMqtt.client?.unsubscribe('hello', () => {
       console.log('hello unsubscribed');
     });
 
     res.json({
       message: 'success'
+    });
+  });
+
+  app.post('/chatting', authorize(), (req, res) => {
+
+    const validation = validateRequired<Chatting>(req.body, ['createdAt', 'createdBy', 'message', 'roomId']);
+    if (validation.result !== 'success') {
+      res.status(StatusCodes.BAD_REQUEST)
+        .json({
+        message: ReasonPhrases.BAD_REQUEST,
+        data: validation.missed
+      });
+      return;
+    }
+
+    const { roomId, message, createdBy, createdAt } = validation.data;
+    chattingMqtt.publish<Chatting>(CHATTING_TOPIC, {
+      roomId,
+      message,
+      createdBy,
+      createdAt,
+    });
+
+    res.json({
+      result: 'success'
     });
   });
 }
