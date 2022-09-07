@@ -1,0 +1,17 @@
+<div class="chat">
+  <hr/>
+  <div class="chat__top">
+    <div>채팅</div>
+    <div>
+      <button (click)="loadRooms()">refresh</button>
+    </div>
+  </div>
+  <ul>
+    <li class="room-item"
+      *ngFor="let room of rooms"
+      (click)="enterRoom(room.id)"
+    >
+      {{room.title}}
+    </li>
+  </ul>
+</div>

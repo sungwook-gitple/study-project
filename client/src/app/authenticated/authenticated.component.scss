@@ -1,0 +1,19 @@
+.authentication {
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  margin-top: 0.5rem;
+
+  &__password {
+    margin-top: 0.25rem;
+  }
+  &__sign-in {
+    margin-top: 0.6rem;
+    display: flex;
+    justify-content: center;
+
+    button {
+      width: 100%;
+    }
+  }
+}

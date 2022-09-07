@@ -1,0 +1,23 @@
+<main class="app-main">
+  <article class="top">
+    <app-authenticated></app-authenticated>
+  </article>
+  <article>
+    <app-room-list (currentRoomEmitter)="setCurrentRoomId($event)"></app-room-list>
+  </article>
+  <article>
+    <!-- <input type="hidden" #currentRoomId> -->
+    <app-room [currentRoomId]="currentRoomId"></app-room>
+  </article>
+  
+  <input type="hidden" #selection>
+  <!-- Terminal -->
+  <!-- <div class="terminal" [ngSwitch]="selection.value">
+      <pre *ngSwitchDefault>ng generate component xyz</pre>
+      <pre *ngSwitchCase="'material'">ng add @angular/material</pre>
+      <pre *ngSwitchCase="'dependency'">ng add _____</pre>
+      <pre *ngSwitchCase="'test'">ng test</pre>
+      <pre *ngSwitchCase="'build'">ng build --prod</pre>
+  </div> -->
+</main>
+<router-outlet></router-outlet>

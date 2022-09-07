@@ -1,0 +1,102 @@
+import { Inject, Injectable } from '@angular/core';
+import * as mqtt from 'mqtt/dist/mqtt.min';
+import { CHATTING_TOPIC } from 'src/app/chat/constants';
+import { Chatting } from 'src/app/chat/types';
+import { MyMqttClient, MyMqttClientOption } from './types';
+import { validateRequired } from './util';
+
+type MqttClient = mqtt.MqttClient;
+
+@Injectable()
+export class MyMqttClientImpl implements MyMqttClient {
+
+  constructor(@Inject('mqttOptions') private readonly mqttOptions: MyMqttClientOption) {
+    console.log('=== mqttOptions', mqttOptions);
+    this.connect();
+  }
+  client?: MqttClient;
+
+  static getInstance(mqttOptions: MyMqttClientOption): MyMqttClient {
+    return new MyMqttClientImpl({
+      HOST: mqttOptions.HOST,
+      PORT: mqttOptions.PORT,
+      WS_PORT: mqttOptions.WS_PORT,
+    });
+  }
+
+  updateChat: (chat: Chatting) => void = () => {};
+
+  connect(): MqttClient {
+
+    const url = `http://${this.mqttOptions.HOST}`;
+    const client = mqtt.connect(url, {
+      clientId: 'abc',
+      username: 'swkim@gitplecorp.com',
+      // password: '{USER_TOKEN}' // TODO - user token
+      // path: '/ws',
+      protocol: 'ws',
+      port: this.mqttOptions.WS_PORT,
+      // port: 443,
+      clean: true,
+      keepalive: 60 * 5,
+      reconnectPeriod: 500
+    });
+    this.client = client;
+
+    client.on('connect', () => {
+      console.log(`chatting subscriber connected ${this.mqttOptions.HOST}:${this.mqttOptions.PORT}`);
+      // client.subscribe(CHATTING_TOPIC);
+      // console.log(`subscribe topic:`, CHATTING_TOPIC);
+    });
+
+    client.on('message', async (topic, payload) => {
+
+      try {
+        const jsonPayload = JSON.parse(payload.toString());
+        if (typeof jsonPayload !== 'object') {
+          console.error('object error');
+          return;
+        }
+
+        const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
+        if (validation.result === 'fail') {
+          this.publishError(validation);
+          console.error('required:', validation.missed);
+          return;
+        }
+
+        console.log('validation.data.message', validation.data.message);
+        this.updateChat(validation.data);
+
+      } catch (e) {
+        console.error(e);
+        const { message } = e as Error;
+        this.publishError({
+          result: false,
+          message,
+        });
+      }
+    });
+
+    return client;
+  }
+
+  subscribe(roomId) {
+    const roomTopic = `${CHATTING_TOPIC}/${roomId}`;
+    this.client.subscribe(roomTopic);
+  }
+
+  subscribeRoom(roomId, cb) {
+    const roomTopic = `${CHATTING_TOPIC}/${roomId}`;
+    this.client.subscribe(roomTopic);
+    this.updateChat = cb;
+  }
+
+  publish<T extends Record<string, any>>(topic: string, payload: T): void {
+    this.client.publish(topic, JSON.stringify(payload));
+  }
+  publishError<T extends Record<string, any>>(payload: T): void {
+    this.client.publish(CHATTING_TOPIC, JSON.stringify(payload));
+  }
+
+}

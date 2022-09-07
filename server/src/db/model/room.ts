@@ -10,7 +10,11 @@ export const roomSchema = new Schema<Room>({
   createdBy: String,
   createdAt: Date,
 }, {
-  timestamps: true
+  timestamps: true,
+  toJSON: {
+    virtuals: true
+  }
 });
+
 
 export const roomModel = mongoose.model<Room, Model<Room, {}, {}>>('Room', roomSchema);

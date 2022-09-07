@@ -1,5 +1,6 @@
 import { ChattingModel } from '@/src/db/model/chatting';
 import { validateRequired } from '@/src/util/validation/requestValidation';
+import jwt from 'jsonwebtoken';
 import { DocumentDefinition } from 'mongoose';
 import mqtt, { MqttClient } from 'mqtt';
 import { CHATTING_ERROR_TOPIC, CHATTING_TOPIC } from './constants';
@@ -41,6 +42,18 @@ export class MyMqttImpl implements MyMqtt {
           console.error('object error');
           return;
         }
+
+        const { token } = jsonPayload;
+        const user = jwt.decode(token);
+        if (!user || typeof user === 'string') {
+          this.publishError({
+            result: 'fail',
+            message: 'user token error'
+          });
+          return;
+        }
+
+        const createdBy = user.id;
 
         const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
         if (validation.result === 'fail') {

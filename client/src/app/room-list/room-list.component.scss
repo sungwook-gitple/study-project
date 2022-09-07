@@ -1,0 +1,25 @@
+.chat {
+  min-width: 15rem;
+
+  &__top {
+    display: flex;
+    justify-content: space-between;
+  }
+}
+
+.room-item {
+  list-style-type: none;
+  padding: 0.5rem 1rem;
+  border-style: solid;
+  border-width: 0.5px;
+  border-top: none;
+
+  &:hover {
+    background-color: rgb(192, 239, 244);
+    opacity: 0.3;
+  }
+
+  &:nth-child(1) {
+    border-top: solid 0.5px;
+  }
+}
