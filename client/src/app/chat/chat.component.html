@@ -1,0 +1,20 @@
+<div class="chat-container">
+  <div class="chat-container__title">> {{currentRoomId}}</div>
+  <ul class="chat-container__chat chat">
+    <li [ngClass]="isMe(chat.createdBy) ? 'chat__row-me': 'chat__row-other'"
+      *ngFor="let chat of chats"
+      class="room-item"
+    >
+      <div class="chat-me"
+        *ngIf="isMe(chat.createdBy) else other">
+        <div class="chat-me-message">{{chat.message}}</div>
+      </div>
+      <ng-template #other>
+        <div class="chat-other">
+          <div class="chat-other-name">{{chat.name}}</div>
+          <div class="chat-other-message">{{chat.message}}</div>
+        </div>
+      </ng-template>
+    </li>
+  </ul>
+</div>

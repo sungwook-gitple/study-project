@@ -284,16 +284,16 @@ svg#clouds {
   display: flex;
   justify-content: center;
   display: flex;
+  flex-direction: column;
   margin: 32px auto;
   padding: 0 16px;
   max-width: 960px;
-  flex-direction: column;
   align-items: center;
 }
 
-:host ::ng-deep app-room {
+:host ::ng-deep app-chat {
   display: block;
   background-color: rgb(207, 216, 246);
   height: 20rem;
-  width: 15rem;
+  width: 20rem;
 }

@@ -1,5 +1,5 @@
 import { MqttClient } from 'mqtt';
-import { Chatting } from 'src/app/chat/types';
+import { Chat } from 'src/app/chat/types';
 
 export interface MyMqttClient {
   client?: MqttClient;
@@ -15,5 +15,5 @@ export interface MyMqttClientOption {
 }
 
 export interface MyMqttClient {
-  updateChat(chat: Chatting): void
+  updateChat(chat: Chat): void
 }

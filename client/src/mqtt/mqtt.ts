@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
 import * as mqtt from 'mqtt/dist/mqtt.min';
 import { CHATTING_TOPIC } from 'src/app/chat/constants';
-import { Chatting } from 'src/app/chat/types';
+import { Chat } from 'src/app/chat/types';
 import { MyMqttClient, MyMqttClientOption } from './types';
 import { validateRequired } from './util';
 
@@ -24,7 +24,7 @@ export class MyMqttClientImpl implements MyMqttClient {
     });
   }
 
-  updateChat: (chat: Chatting) => void = () => {};
+  updateChat: (chat: Chat) => void = () => {};
 
   connect(): MqttClient {
 
@@ -58,10 +58,15 @@ export class MyMqttClientImpl implements MyMqttClient {
           return;
         }
 
-        const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
+        const validation = validateRequired<Chat>(jsonPayload, ['createdAt', 'createdBy', 'message']);
         if (validation.result === 'fail') {
           this.publishError(validation);
           console.error('required:', validation.missed);
+          return;
+        }
+        if (typeof validation.data.createdBy === 'number') {
+          this.publishError(validation);
+          console.error('type error:', 'createdBy:', typeof validation.data.createdBy);
           return;
         }
 

@@ -1,19 +1,22 @@
 import { NgModule } from '@angular/core';
+import { BrowserModule } from '@angular/platform-browser';
 import config from 'src/config';
-// import { chattingMqttClient } from 'src/mqtt';
 import { MyMqttClientImpl } from 'src/mqtt/mqtt';
 import { MyMqttClientOption } from 'src/mqtt/types';
-import { RoomComponent } from './room.component';
+import { ChatComponent } from './chat.component';
 
 @NgModule({
   declarations: [
-    RoomComponent
+    ChatComponent
+  ],
+  imports: [
+    BrowserModule,
   ],
   providers: [
     MyMqttClientImpl,
     { provide: 'mqttOptions', useValue: config.mqtt as MyMqttClientOption }
   ],
-  exports: [RoomComponent],
+  exports: [ChatComponent]
 })
 export class ChatModule {
 

@@ -1,8 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { EventBus } from 'src/event/EventBus';
 import { updateHttpAuthorization } from 'src/http/configOption';
-// import * as mm from '../../mqtt';
-// import { chattingMqttClient } from 'src/mqtt';
 import { getAuthorizationToken } from '../authenticated/util';
 import { requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
 import { Room } from './types';
@@ -19,7 +16,7 @@ export class RoomListComponent implements OnInit {
   @Output()
   currentRoomEmitter = new EventEmitter<{ roomId: string }>();
 
-  constructor(private eventBus: EventBus) { }
+  constructor() { }
 
   async ngOnInit() {
     const token = await getAuthorizationToken();
@@ -48,11 +45,6 @@ export class RoomListComponent implements OnInit {
 
     this.currentRoomEmitter.emit({ roomId: id });
     // await this.showChat(id)
-  }
-
-  async showChat(roomId) {
-    // chattingMqttClient.subscribe(roomId)
-    // this.eventBus.emit({ ENTER_ROOM: { currentRoomId: roomId } })
   }
 
   async leaveRoom(id) {
