@@ -40,6 +40,22 @@
   flex-direction: column;
   height: 100%;
 
+  &__top {
+    margin: 0;
+    padding: 0.5rem;
+    flex: 1;
+    display: flex;
+    background-color: rgb(174, 187, 231);
+    font-style: bold;
+
+    &__leave-link {
+      flex: 1;
+    }
+    &__title {
+      flex: 5;
+      text-align: center;
+    }
+  }
   &__title {
     margin: 0;
     padding: 0.5rem;
