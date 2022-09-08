@@ -1,5 +1,7 @@
 <div class="chat-container">
-  <div class="chat-container__title">> {{currentRoomId}}</div>
+  <div class="chat-container__top">>
+    <div class="chat-container__top__title">> {{currentRoomId}}</div>
+  </div>
   <ul class="chat-container__chat chat">
     <li [ngClass]="isMe(chat.createdBy) ? 'chat__row-me': 'chat__row-other'"
       *ngFor="let chat of chats"
@@ -17,4 +19,14 @@
       </ng-template>
     </li>
   </ul>
+  <div class="chat-container__message">
+    <input class="chat-container__message__input"
+      #message
+      (keypress)="onKeypress($event)"
+    >
+    <button class="chat-container__message__send-btn"
+      (click)="sendMessage(message.value)"
+    >전송</button>
+  </div>
+  <div>dd: {{message.value}}</div>
 </div>

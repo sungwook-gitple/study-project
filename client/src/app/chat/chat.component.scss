@@ -52,6 +52,20 @@
     padding: 1rem 0;
     flex: 9;
   }
+  &__message {
+    flex: 1;
+    display: flex;
+    flex-wrap: nowrap;
+    border: 0.0625rem solid #aaa;
+
+    &__input {
+      flex: 8;
+      border: none;
+    }
+    &__send-btn {
+      flex: 2;
+    }
+  }
 }
 .chat-other {
   max-width: 100%;

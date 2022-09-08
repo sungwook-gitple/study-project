@@ -1,9 +1,11 @@
 export interface Chat {
+  id?: string;
   message: string;
   name: string;
   createdBy: string;
   createdAt: Date;
   roomId: string;
+  isTransferred: boolean;
 }
 
 export interface IChatComponent {
@@ -11,4 +13,5 @@ export interface IChatComponent {
   userId: string;
 
   isMe(createdBy: string): boolean;
+  leaveRoom(): void;
 }
