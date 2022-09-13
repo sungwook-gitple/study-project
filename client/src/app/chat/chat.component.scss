@@ -113,3 +113,9 @@
   font-size: 1rem;
   border-radius: 10px;
 }
+.chat-setting {
+  user-select: none;
+  &:focus {
+    outline: none;
+  }
+}

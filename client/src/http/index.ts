@@ -9,9 +9,8 @@ const http = axios.create({
   withCredentials: true,
 });
 
-http.interceptors.request.use(function(config) {
+http.interceptors.request.use(config => {
 
-  console.log('=== value', config);
   const headers = config.headers;
   const token = headers.Authorization || getAuthorizationToken();
 

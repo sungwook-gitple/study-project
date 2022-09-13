@@ -23,6 +23,23 @@ export async function requestLeaveRoom(id: string): Promise<ServerResponse> {
     .then(r => r.data);
 }
 
+export async function requestRemoveRoom(id: string): Promise<ServerResponse> {
+
+  return http.delete(`/rooms/${id}`)
+    .then(r => ({
+      result: 'success' as const,
+      data: r.data,
+    }))
+    .catch((err: AxiosError) => {
+      console.error(err);
+      return {
+        result: 'fail',
+        message: err.message,
+        data: err,
+      };
+    });
+}
+
 export async function requestRoomById(id: string): Promise<ServerResponse> {
 
   return http.get(`/rooms/${id}`)

@@ -7,6 +7,16 @@
     <div class="chat-container__top__members"
       tooltip="tooltip?"
     >👥</div>
+    <!-- <button class="chat-setting btn btn-xs btn-default"
+      (click)="handleSettingClick($event)"
+    >
+      <i class="bi bi-gear"></i>
+    </button> -->
+    <button class="chat-explosion"
+      (click)="handleExplosionClick()"
+    >
+      🔥
+    </button>
   </div>
   <ul class="chat-container__chat chat">
     <li [ngClass]="isMe(chat.createdBy) ? 'chat__row-me': 'chat__row-other'"

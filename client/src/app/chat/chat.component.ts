@@ -2,7 +2,7 @@ import { AfterViewChecked, Component, ElementRef, OnInit, SimpleChanges, ViewChi
 import { ActivatedRoute, Router } from '@angular/router';
 import { MyMqttClientImplV2 } from 'src/mqtt/mqttV2';
 import { getUser } from '../authenticated/util';
-import { requestLeaveRoom, requestRoomById } from '../room-list/request';
+import { requestLeaveRoom, requestRemoveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
 import { Chat, IChatComponent } from './types';
 
@@ -124,10 +124,26 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
   }
   userId: string;
 
+  async handleSettingClick() {
+
+  }
+
   async handleLeaveClick() {
     const result = await this.leaveRoom();
     if (result.result !== 'success') {
       console.error('cannot leave room');
+      return;
+    }
+
+    this.router.navigateByUrl('/rooms');
+  }
+
+  async handleExplosionClick() {
+
+    const result = await this.removeRoom();
+    console.log('=== result', result);
+    if (result.result !== 'success') {
+      console.error('방 삭제에 실패했습니다.');
       return;
     }
 
@@ -148,6 +164,17 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
       };
     }
     return requestLeaveRoom(this.currentRoomId);
+  }
+
+  async removeRoom() {
+    if (!this.currentRoomId) {
+      console.error('room id가 없습니다.');
+      return {
+        result: 'fail',
+        message: 'room id가 없습니다.'
+      };
+    }
+    return requestRemoveRoom(this.currentRoomId);
   }
 
   isMe(createdBy: string): boolean {

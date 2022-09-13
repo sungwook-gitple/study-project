@@ -7,6 +7,7 @@ import { Request, Response } from 'express';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
 import restful from 'node-restful';
 import { roomService } from '.';
+import { findByIdAndCreatedBy } from './room.repository';
 
 export default {
   register() {
@@ -24,8 +25,8 @@ export default {
       }))
       .before('delete', validateRequest({
         id: { type: 'string' },
-        updatedBy: { type: 'string' }
-      }));
+      }))
+      .before('delete', authorize('own', findByIdAndCreatedBy));
 
     roomApp.route('enter.put', {
       detail: true,

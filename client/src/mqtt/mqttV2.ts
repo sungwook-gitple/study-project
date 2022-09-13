@@ -3,7 +3,7 @@ import * as mqtt from 'mqtt/dist/mqtt.min';
 import { MqttService } from 'ngx-mqtt';
 import { CHATTING_TOPIC } from 'src/app/chat/constants';
 import { Chat } from 'src/app/chat/types';
-import { MyMqttClient, MyMqttClientOption, MyMqttClientV2 } from './types';
+import { MyMqttClientOption, MyMqttClientV2 } from './types';
 import { validateRequired } from './util';
 
 type MqttClient = mqtt.MqttClient;
@@ -15,8 +15,6 @@ export class MyMqttClientImplV2 implements MyMqttClientV2 {
     @Inject('mqttOptions') private readonly mqttOptions: MyMqttClientOption,
     private readonly mqttService: MqttService,
   ) {
-    console.log('=== mqttService', mqttService);
-    console.log('=== mqttOptions', mqttOptions);
     this.connect();
   }
   client?: MqttClient;
