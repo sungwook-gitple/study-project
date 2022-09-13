@@ -3,31 +3,29 @@ import * as mqtt from 'mqtt/dist/mqtt.min';
 import { MqttService } from 'ngx-mqtt';
 import { CHATTING_TOPIC } from 'src/app/chat/constants';
 import { Chat } from 'src/app/chat/types';
-import { MyMqttClient, MyMqttClientOption } from './types';
+import { MyMqttClient, MyMqttClientOption, MyMqttClientV2 } from './types';
 import { validateRequired } from './util';
 
 type MqttClient = mqtt.MqttClient;
 
 @Injectable()
-export class MyMqttClientImpl implements MyMqttClient {
+export class MyMqttClientImplV2 implements MyMqttClientV2 {
 
   constructor(
     @Inject('mqttOptions') private readonly mqttOptions: MyMqttClientOption,
+    private readonly mqttService: MqttService,
   ) {
+    console.log('=== mqttService', mqttService);
     console.log('=== mqttOptions', mqttOptions);
     this.connect();
   }
   client?: MqttClient;
 
-  // static getInstance(mqttOptions: MyMqttClientOption): MyMqttClient {
-  //   return new MyMqttClientImpl({
-  //     HOST: mqttOptions.HOST,
-  //     PORT: mqttOptions.PORT,
-  //     WS_PORT: mqttOptions.WS_PORT,
-  //   });
-  // }
-
   updateChat: (chat: Chat) => void = () => {};
+
+  topic(topic: string) {
+    return this.mqttService.observe(topic);
+  }
 
   connect(username?: string, password?: string): MqttClient {
 
