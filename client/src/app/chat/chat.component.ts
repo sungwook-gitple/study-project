@@ -1,6 +1,7 @@
 import { AfterViewChecked, Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MyMqttClientImpl } from 'src/mqtt/mqtt';
+import { MyMqttClientImplV2 } from 'src/mqtt/mqttV2';
+import { getUser } from '../authenticated/util';
 import { requestLeaveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
 import { Chat, IChatComponent } from './types';
@@ -104,19 +105,24 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
   })
   messageRef: ElementRef;
 
-  userId = '9';
+  user: {
+    name: string;
+    username?: string;
+    id: string;
+  };
 
   chatElement: HTMLElement;
   // chattings: Chatting[] = [];
 
   constructor(
-    private readonly chattingMqttClient: MyMqttClientImpl,
+    private readonly chattingMqttClient: MyMqttClientImplV2,
     elementRef: ElementRef,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
   ) {
     this.messageRef = elementRef;
   }
+  userId: string;
 
   async handleLeaveClick() {
     const result = await this.leaveRoom();
@@ -145,7 +151,7 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
   }
 
   isMe(createdBy: string): boolean {
-    return this.userId === createdBy;
+    return this.user.id === createdBy;
   }
 
   ngAfterViewChecked(): void {
@@ -158,11 +164,18 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
   }
 
   ngOnInit() {
+
+    // this.user.id = getUserId();
+    this.user = getUser();
+    if (!this.user.id) {
+      throw new Error('userId does not exist');
+    }
+
     this.route.params.subscribe(async params => {
 
       this.currentRoomId = params.id;
       const result = await requestRoomById(this.currentRoomId);
-      console.log('== result', result);
+
       if (result.result !== 'success') {
         console.error(result.message);
         return;
@@ -170,10 +183,12 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
 
       this.roomName = result.data.title;
 
-
-      this.chattingMqttClient.subscribeRoom(this.currentRoomId, payload => {
-        this.setChat(payload);
-      });
+      const roomTopic = `${CHATTING_TOPIC}/${this.currentRoomId}`;
+      this.chattingMqttClient.topic(roomTopic)
+        .subscribe(data => {
+          const payloadStr = data.payload.toString();
+          this.setChat(JSON.parse(payloadStr));
+        });
     });
   }
 
@@ -183,8 +198,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
       this.updateTransferred();
       return;
     }
+
     this.chats.push(chat);
-    console.log('chats', this.chats);
 
     this.chatElement.scrollTop = this.chatElement.scrollHeight;
   }
@@ -195,8 +210,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
 
   sendMessage(message) {
     const chat: Chat = {
-      name: this.userId,
-      createdBy: this.userId,
+      name: this.user.name,
+      createdBy: this.user.id,
       createdAt: new Date(),
       message,
       roomId: this.currentRoomId,

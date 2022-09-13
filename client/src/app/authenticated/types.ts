@@ -1,4 +1,6 @@
 export interface SignInResponse {
-  message: string
-  token: string
+  message: string;
+  token: string;
+  userId: string;
+  name: string;
 }

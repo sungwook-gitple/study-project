@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { requestSignIn } from './request';
-import { setAuthorizationToken } from './util';
+import { setAuthorizationData } from './util';
 
 @Component({
   selector: 'app-sign-in',
@@ -44,7 +44,11 @@ export class SignInComponent implements OnInit {
       return;
     }
 
-    await setAuthorizationToken(result.token);
+    await setAuthorizationData({
+      token: result.token,
+      userId: result.userId,
+      name: result.name,
+    });
     this.router.navigateByUrl('/rooms');
   }
 }
