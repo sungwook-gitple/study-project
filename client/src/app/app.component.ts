@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { setTheme } from 'ngx-bootstrap/utils';
 
 @Component({
   selector: 'app-root',
@@ -9,6 +10,10 @@ export class AppComponent {
   title = 'client';
 
   currentRoomId;
+
+  constructor() {
+    setTheme('bs4');
+  }
 
   setCurrentRoomId(event: { roomId: string }) {
     console.log('== testEvent', event);

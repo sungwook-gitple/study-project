@@ -1,7 +1,8 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { updateHttpAuthorization } from 'src/http/configOption';
 import { getAuthorizationToken } from '../authenticated/util';
-import { requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
+import { requestCreateRoom, requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
 import { Room } from './types';
 
 @Component({
@@ -16,12 +17,20 @@ export class RoomListComponent implements OnInit {
   @Output()
   currentRoomEmitter = new EventEmitter<{ roomId: string }>();
 
-  constructor() { }
+  constructor(
+    private router: Router
+  ) { }
 
   async ngOnInit() {
     const token = await getAuthorizationToken();
     await updateHttpAuthorization(token);
     await this.loadRooms();
+  }
+
+  async handleCreateRoomClick() {
+    const result = await requestCreateRoom('hahah');
+
+    console.log('create room', result);
   }
 
   async loadRooms() {
@@ -44,7 +53,8 @@ export class RoomListComponent implements OnInit {
     }
 
     this.currentRoomEmitter.emit({ roomId: id });
-    // await this.showChat(id)
+
+    this.router.navigateByUrl(`/chat/${id}`);
   }
 
   async leaveRoom(id) {

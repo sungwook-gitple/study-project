@@ -7,16 +7,20 @@ import { SignInResponse } from './types';
 // req.subscribe();
 // console.log('== result2', req)
 
-export async function requestSignIn() {
-  const signInData = await http.post<SignInResponse>('/signIn', {
-    username: 'swkim@gitplecorp.com',
-    password: '1234'
-  }).then(r => r.data)
+export async function requestSignIn(username: string, password: string) {
+  const signInData = await http.post<SignInResponse>(
+    '/signIn',
+    {
+      username,
+      password
+    }
+  ).then(r => r.data)
+    .catch (e => {});
 
-  if (!signInData.token) {
-    console.error('token을 받지 못했습니다.')
-    return
+  if (!signInData || !signInData.token) {
+    console.error('token을 받지 못했습니다.');
+    return;
   }
-  
-  return signInData
+
+  return signInData;
 }

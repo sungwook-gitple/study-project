@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import config from 'src/config';
 import { MyMqttClientImpl } from 'src/mqtt/mqtt';
 import { MyMqttClientOption } from 'src/mqtt/types';
+import { AppRoutingModule } from '../app-routing.module';
 import { ChatComponent } from './chat.component';
 
 @NgModule({
@@ -11,6 +13,7 @@ import { ChatComponent } from './chat.component';
   ],
   imports: [
     BrowserModule,
+    AppRoutingModule,
   ],
   providers: [
     MyMqttClientImpl,

@@ -20,8 +20,10 @@
     "@angular/platform-browser-dynamic": "~8.2.14",
     "@angular/router": "~8.2.14",
     "axios": "^0.27.2",
+    "bootstrap-icons": "^1.9.1",
     "http-status-codes": "^2.2.0",
     "mqtt": "^4.3.7",
+    "ngx-bootstrap": "^5.6.2",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"

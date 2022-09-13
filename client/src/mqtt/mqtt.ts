@@ -26,12 +26,13 @@ export class MyMqttClientImpl implements MyMqttClient {
 
   updateChat: (chat: Chat) => void = () => {};
 
-  connect(): MqttClient {
+  connect(username?: string, password?: string): MqttClient {
 
+    console.log('connecting to mqtt...', username);
     const url = `http://${this.mqttOptions.HOST}`;
     const client = mqtt.connect(url, {
       clientId: 'abc',
-      username: 'swkim@gitplecorp.com',
+      username: username || 'swkim@gitplecorp.com',
       // password: '{USER_TOKEN}' // TODO - user token
       // path: '/ws',
       protocol: 'ws',
@@ -50,8 +51,8 @@ export class MyMqttClientImpl implements MyMqttClient {
     });
 
     client.on('message', async (topic, payload) => {
-
-      try {
+console.log('=== message', topic, payload);
+try {
         const jsonPayload = JSON.parse(payload.toString());
         if (typeof jsonPayload !== 'object') {
           console.error('object error');

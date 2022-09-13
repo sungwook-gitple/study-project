@@ -3,15 +3,25 @@
   <div class="chat__top">
     <div>채팅</div>
     <div>
-      <button (click)="loadRooms()">refresh</button>
+      <button class="btn btn-primary"
+        (click)="handleCreateRoomClick()"
+      ><i class="bi-plus"></i></button>
+      <button class="btn btn-success"
+        (click)="loadRooms()"
+      >&#8635;</button>
     </div>
   </div>
-  <ul>
-    <li class="room-item"
+  <ul class="list-group">
+    <li class="room-item list-group-item list-group-item-action"
       *ngFor="let room of rooms"
       (click)="enterRoom(room.id)"
     >
-      {{room.title}}
+      <div class="room-item__title">
+        {{room.title}}
+      </div>
+      <!-- <button class="close align-text-top" aria-label="Close" label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button> -->
     </li>
   </ul>
   <router-outlet></router-outlet>

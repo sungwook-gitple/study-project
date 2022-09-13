@@ -1,7 +1,12 @@
 <div class="chat-container">
   <div class="chat-container__top">
-    <a href="" class="chat-container__top__leave-link">&lt;</a>
-    <div class="chat-container__top__title">{{currentRoomId}}</div>
+    <nav>
+      <a (click)="handleLeaveClick()" class="chat-container__top__leave-link">&lt;</a>
+    </nav>
+    <div class="chat-container__top__title">{{roomName}}</div>
+    <div class="chat-container__top__members"
+      tooltip="tooltip?"
+    >👥</div>
   </div>
   <ul class="chat-container__chat chat">
     <li [ngClass]="isMe(chat.createdBy) ? 'chat__row-me': 'chat__row-other'"
@@ -29,5 +34,4 @@
       (click)="sendMessage(message.value)"
     >전송</button>
   </div>
-  <div>dd: {{message.value}}</div>
 </div>

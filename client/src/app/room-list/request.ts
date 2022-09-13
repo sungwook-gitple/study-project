@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import { http } from 'src/http';
 import { ServerResponse } from '../../http/types';
 
@@ -8,12 +9,44 @@ export async function requestRoomList() {
   return result;
 }
 
-export async function requestEnterRoom(id): Promise<ServerResponse> {
+export async function requestEnterRoom(id: string): Promise<ServerResponse> {
   return http.put(`/rooms/${id}/enter`)
     .then(r => r.data);
 }
 
-export async function requestLeaveRoom(id): Promise<ServerResponse> {
+export async function requestLeaveRoom(id: string): Promise<ServerResponse> {
   return http.put(`/rooms/${id}/leave`)
     .then(r => r.data);
+}
+
+export async function requestRoomById(id: string): Promise<ServerResponse> {
+  return http.get(`/rooms/${id}`)
+    .then(r => {
+      return {
+        result: 'success' as const,
+        data: r.data,
+      };
+    })
+    .catch((err: AxiosError) => {
+      console.error(err);
+      return {
+        result: 'fail' as const,
+        message: `방 정보를 불러오는데 실패했습니다.`,
+        data: err
+      };
+    });
+}
+
+export async function requestCreateRoom(title: string): Promise<ServerResponse> {
+  return http.post('/rooms', {
+    title
+  }).then(r => r.data)
+  .catch((err: AxiosError) => {
+    console.error(err);
+    return {
+      result: 'fail' as const,
+      message: '방 생성 실패',
+      data: err
+    };
+  });
 }

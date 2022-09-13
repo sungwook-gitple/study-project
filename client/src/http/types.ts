@@ -1,7 +1,7 @@
-export type ServerResponse = {
+export type ServerResponse<T = any> = {
   result: 'success';
   message?: string;
-  data: any;
+  data: T;
 } | {
   result: 'fail';
   message: string;

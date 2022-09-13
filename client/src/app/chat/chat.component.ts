@@ -1,5 +1,7 @@
-import { AfterViewChecked, Component, ElementRef, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MyMqttClientImpl } from 'src/mqtt/mqtt';
+import { requestLeaveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
 import { Chat, IChatComponent } from './types';
 
@@ -8,10 +10,11 @@ import { Chat, IChatComponent } from './types';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements IChatComponent, OnInit, OnChanges, AfterViewChecked {
+export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
 
-  // tslint:disable-next-line: variable-name
-  private _currentRoomId?: string;
+  currentRoomId = '';
+  roomName = '';
+
   chats: Chat[] = [
     {
       id: '1',
@@ -106,24 +109,39 @@ export class ChatComponent implements IChatComponent, OnInit, OnChanges, AfterVi
   chatElement: HTMLElement;
   // chattings: Chatting[] = [];
 
-  @Input()
-  set currentRoomId(id) {
-    this._currentRoomId = id;
-  }
-
-  get currentRoomId() {
-    return this._currentRoomId;
-  }
-
   constructor(
-    private chattingMqttClient: MyMqttClientImpl,
-    elementRef: ElementRef
+    private readonly chattingMqttClient: MyMqttClientImpl,
+    elementRef: ElementRef,
+    private readonly router: Router,
+    private readonly route: ActivatedRoute,
   ) {
     this.messageRef = elementRef;
   }
 
-  leaveRoom(): void {
-    throw new Error('Method not implemented.');
+  async handleLeaveClick() {
+    const result = await this.leaveRoom();
+    if (result.result !== 'success') {
+      console.error('cannot leave room');
+      return;
+    }
+
+    this.router.navigateByUrl('/rooms');
+  }
+
+  async handleGoToRoomListClick() {
+
+    this.router.navigateByUrl('/rooms');
+  }
+
+  async leaveRoom() {
+    if (!this.currentRoomId) {
+      console.error('room id가 없습니다.');
+      return {
+        result: 'fail',
+        message: 'room id가 없습니다.'
+      };
+    }
+    return requestLeaveRoom(this.currentRoomId);
   }
 
   isMe(createdBy: string): boolean {
@@ -137,16 +155,27 @@ export class ChatComponent implements IChatComponent, OnInit, OnChanges, AfterVi
 
   ngOnChanges(changes: SimpleChanges): void {
 
-    const currentRoomId = changes.currentRoomId.currentValue;
-    if (currentRoomId !== changes.currentRoomId.previousValue) {
-
-      this.chattingMqttClient.subscribeRoom(currentRoomId, payload => {
-        this.setChat(payload);
-      });
-    }
   }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.route.params.subscribe(async params => {
+
+      this.currentRoomId = params.id;
+      const result = await requestRoomById(this.currentRoomId);
+      console.log('== result', result);
+      if (result.result !== 'success') {
+        console.error(result.message);
+        return;
+      }
+
+      this.roomName = result.data.title;
+
+
+      this.chattingMqttClient.subscribeRoom(this.currentRoomId, payload => {
+        this.setChat(payload);
+      });
+    });
+  }
 
   setChat(chat: Chat) {
 
@@ -181,6 +210,7 @@ export class ChatComponent implements IChatComponent, OnInit, OnChanges, AfterVi
   onKeypress(key) {
     if (key.code === 'Enter') {
       this.sendMessage(this.messageRef.nativeElement.value);
+      this.messageRef.nativeElement.value = '';
     }
   }
 
