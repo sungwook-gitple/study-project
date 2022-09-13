@@ -1,1 +1,13 @@
-[]
+[
+  {
+    "_id": "9a5e0950-5532-4fc9-97c1-9e1a00801da1",
+    "name": "(Local Env)",
+    "default": false,
+    "global": true,
+    "local": true,
+    "sortNum": -2,
+    "created": "2022-09-13T07:54:32.070Z",
+    "modified": "2022-09-13T07:54:32.070Z",
+    "data": []
+  }
+]

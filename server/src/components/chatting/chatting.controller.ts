@@ -1,18 +1,20 @@
 import app from '@/src/app';
 import { chattingMqtt } from '@/src/components/chatting';
+import { ChattingModel, chattingSchema } from '@/src/db/model/chatting';
 import { authorize } from '@/src/middleware/authorization';
 import { validateRequired } from '@/src/util/validation/requestValidation';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+import restful from 'node-restful';
 import { CHATTING_TOPIC } from './constants';
 import { Chatting } from './types';
 
 export function routeChatting() {
 
-  // const Chatting = restful.model('chatting', chattingSchema)
-  //   .methods(['get', 'post', 'put', 'delete']);
+  const Chatting = restful.model('chatting', chattingSchema)
+    .methods(['get', 'post', 'put', 'delete']);
 
-  // Chatting.before('', authorize());
-  // Chatting.register(app, '/chatting');
+  Chatting.before('', authorize());
+  Chatting.register(app, '/chatting');
 
   app.get('/chatting/unsubscribe', (req, res) => {
 
@@ -24,6 +26,19 @@ export function routeChatting() {
       message: 'success'
     });
   });
+
+  app.get('/rooms/:id/chatting', async (req, res) => {
+
+    const roomId = req.params.id;
+
+    const chats = await ChattingModel.find({ roomId });
+
+    res.json({
+      result: 'success',
+      data: chats
+    });
+  });
+
 
   app.post('/chatting', authorize(), (req, res) => {
 

@@ -125,12 +125,12 @@
     "method": "POST",
     "sortNum": 60000,
     "created": "2022-09-08T08:06:55.055Z",
-    "modified": "2022-09-08T08:06:55.055Z",
+    "modified": "2022-09-13T07:54:20.409Z",
     "headers": [],
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"name\": \"김성욱\",\n  \"username\": \"1_swkim@gitplecorp.com\",\n  \"password\": \"1234\"\n}",
+      "raw": "{\n  \"name\": \"이정재\",\n  \"username\": \"ljj@gitplecorp.com\",\n  \"password\": \"1234\"\n}",
       "form": []
     },
     "tests": []
@@ -177,7 +177,7 @@
     "method": "POST",
     "sortNum": 90000,
     "created": "2022-09-08T08:06:55.058Z",
-    "modified": "2022-09-08T08:06:55.058Z",
+    "modified": "2022-09-13T09:07:02.618Z",
     "headers": [
       {
         "name": "Authorization",
@@ -187,7 +187,7 @@
     "params": [],
     "body": {
       "type": "json",
-      "raw": "{\n  \"message\": \"테스트 메세지02\",\n  \"createdBy\": \"631012c9e9ccd5a0c446cbcc\",\n  \"createdAt\": \"2022-08-22 10:00:01+09\"\n}",
+      "raw": "{\n  \"roomId\": \"1234\",\n  \"message\": \"테스트 메세지04\",\n  \"createdBy\": \"631012c9e9ccd5a0c446cbcc\",\n  \"createdAt\": \"2022-08-22 10:00:01+09\"\n}",
       "form": []
     },
     "tests": []
@@ -278,6 +278,25 @@
     "sortNum": 150000,
     "created": "2022-09-08T08:06:55.063Z",
     "modified": "2022-09-08T08:06:55.063Z",
+    "headers": [
+      {
+        "name": "Authorization",
+        "value": "{{token}}"
+      }
+    ],
+    "params": [],
+    "tests": []
+  },
+  {
+    "_id": "17e3d017-d447-47c0-a2cc-74072f4e35ca",
+    "colId": "a063f710-5008-4858-9d77-4b9b38aae10e",
+    "containerId": "80dc5b2c-c9cd-47f1-9acd-e57992ee8ab1",
+    "name": "room chatting",
+    "url": "{{baseUrl}}/rooms/123434/chatting",
+    "method": "GET",
+    "sortNum": 160000,
+    "created": "2022-09-13T09:02:30.248Z",
+    "modified": "2022-09-13T09:03:08.410Z",
     "headers": [
       {
         "name": "Authorization",

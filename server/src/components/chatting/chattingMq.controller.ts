@@ -61,7 +61,7 @@ export class MyMqttImpl implements MyMqtt {
           console.error('required:', validation.missed);
           return;
         }
-
+console.log('=== validation.data.roomId', validation.data.roomId);
         const chatting: DocumentDefinition<Chatting> = {
           roomId: validation.data.roomId,
           message: validation.data.message,
