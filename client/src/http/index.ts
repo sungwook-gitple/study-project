@@ -9,22 +9,22 @@ const http = axios.create({
   withCredentials: true,
 });
 
-http.interceptors.request.use(config => {
+http.interceptors.request.use(axiosConfig => {
 
-  const headers = config.headers;
+  const headers = axiosConfig.headers;
   const token = headers.Authorization || getAuthorizationToken();
 
   return {
-    ...config,
+    ...axiosConfig,
     headers: {
-      ...config.headers,
+      ...axiosConfig.headers,
       Authorization: `Bearer ${token}`
     }
   };
   // return config;
-}, function(err: Error) {
-  console.error('on request', err);
+}, err => {
 
+  console.error('on request', err);
   return Promise.reject(err);
 });
 

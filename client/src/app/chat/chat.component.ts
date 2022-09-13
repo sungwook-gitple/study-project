@@ -1,9 +1,11 @@
-import { AfterViewChecked, Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { MyMqttClientImplV2 } from 'src/mqtt/mqttV2';
 import { getUser } from '../authenticated/util';
 import { requestLeaveRoom, requestRemoveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
+import { chatDummy } from './dummy';
 import { Chat, IChatComponent } from './types';
 
 @Component({
@@ -11,94 +13,12 @@ import { Chat, IChatComponent } from './types';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss'],
 })
-export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
+export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, OnDestroy {
 
   currentRoomId = '';
   roomName = '';
 
-  chats: Chat[] = [
-    {
-      id: '1',
-      roomId: '1234',
-      name: '디카프리오',
-      message: '안녕하세요.adajfaldsjfalsjfadajfaldsjfalsjfadajfaldsjfalsjfadajfaldsjfalsjfadajfaldsjfalsjfadajfaldsjfalsjfadajfaldsjfalsjf',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '2',
-      roomId: '1234',
-      name: '김성욱',
-      message: '안녕하세요.',
-      createdAt: new Date(),
-      createdBy: '9',
-      isTransferred: true,
-    },
-    {
-      id: '3',
-      roomId: '1234',
-      name: '디카프리오',
-      message: '날씨가 좋네요.',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '4',
-      roomId: '1234',
-      name: '김성욱',
-      message: '점심 잘 드렸나요?',
-      createdAt: new Date(),
-      createdBy: '9',
-      isTransferred: true,
-    },
-    {
-      id: '5',
-      roomId: '1234',
-      name: '도배꾼',
-      message: '사라져라',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '6',
-      roomId: '1234',
-      name: '도배꾼',
-      message: '사라져라',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '7',
-      roomId: '1234',
-      name: '도배꾼',
-      message: '사라져라',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '8',
-      roomId: '1234',
-      name: '도배꾼',
-      message: '사라져라',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-    {
-      id: '9',
-      roomId: '1234',
-      name: '도배꾼',
-      message: '사라져라',
-      createdAt: new Date(),
-      createdBy: '1234',
-      isTransferred: true,
-    },
-  ];
+  chats: Chat[] = chatDummy;
 
   @ViewChild('message', {
     static: true
@@ -112,7 +32,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
   };
 
   chatElement: HTMLElement;
-  // chattings: Chatting[] = [];
+
+  subscription: Subscription;
 
   constructor(
     private readonly chattingMqttClient: MyMqttClientImplV2,
@@ -186,8 +107,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
     this.chatElement.scrollTop = this.chatElement.scrollHeight;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   ngOnInit() {
@@ -210,8 +131,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
 
       this.roomName = result.data.title;
 
-      const roomTopic = `${CHATTING_TOPIC}/${this.currentRoomId}`;
-      this.chattingMqttClient.topic(roomTopic)
+      this.subscription = this.chattingMqttClient
+        .setRoomId(this.currentRoomId)
         .subscribe(data => {
           const payloadStr = data.payload.toString();
           this.setChat(JSON.parse(payloadStr));
@@ -255,5 +176,4 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked {
       this.messageRef.nativeElement.value = '';
     }
   }
-
 }
