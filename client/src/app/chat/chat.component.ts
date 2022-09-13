@@ -6,6 +6,7 @@ import { getUser } from '../authenticated/util';
 import { requestLeaveRoom, requestRemoveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
 import { chatDummy } from './dummy';
+import { requestChats } from './request';
 import { Chat, IChatComponent } from './types';
 
 @Component({
@@ -111,13 +112,14 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
     this.subscription.unsubscribe();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    // this.user.id = getUserId();
     this.user = getUser();
     if (!this.user.id) {
       throw new Error('userId does not exist');
     }
+
+    this.chats = await (await requestChats()).data;
 
     this.route.params.subscribe(async params => {
 

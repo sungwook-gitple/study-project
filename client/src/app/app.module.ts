@@ -9,6 +9,7 @@ import { SignInComponent } from './authenticated/signIn.component';
 import { ChatModule } from './chat/chat.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomCreationComponent } from './room/room-creation.component';
+import { SignUpComponent } from './user/sign-up/sign-up.component';
 
 const mqttOptions: IMqttServiceOptions = {
   host: environment.mqtt.HOST,
@@ -21,6 +22,7 @@ const mqttOptions: IMqttServiceOptions = {
     SignInComponent,
     RoomListComponent,
     RoomCreationComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
