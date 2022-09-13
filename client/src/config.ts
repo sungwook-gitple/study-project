@@ -8,4 +8,4 @@ export default {
     PORT: 1883,
     WS_PORT: 3000
   }
-}
+};

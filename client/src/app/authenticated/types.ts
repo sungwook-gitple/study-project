@@ -4,3 +4,8 @@ export interface SignInResponse {
   userId: string;
   name: string;
 }
+
+export interface User {
+  id: string;
+  name: string;
+}

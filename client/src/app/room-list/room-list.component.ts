@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { updateHttpAuthorization } from 'src/http/configOption';
 import { getAuthorizationToken } from '../authenticated/util';
-import { requestCreateRoom, requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
+import { requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
 import { Room } from './types';
 
 @Component({
@@ -28,9 +28,7 @@ export class RoomListComponent implements OnInit {
   }
 
   async handleCreateRoomClick() {
-    const result = await requestCreateRoom('hahah');
-
-    console.log('create room', result);
+    this.router.navigateByUrl('/room-creation');
   }
 
   async loadRooms() {

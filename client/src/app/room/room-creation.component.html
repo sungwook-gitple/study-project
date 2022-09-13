@@ -1,0 +1,13 @@
+<div class="container card-body">
+  <h5 class="card-title text-center">방 만들기</h5>
+  <input class="form-control"
+    #title
+    (keypress)="handleRoomNameEnter($event)"
+  >
+  <div class="container__bottom">
+    <button class="btn btn-secondary"
+      (click)="handleCloseClick()"
+    >닫기</button>
+    <button class="btn btn-primary">만들기</button>
+  </div>
+</div>

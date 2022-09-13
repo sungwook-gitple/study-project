@@ -1,4 +1,5 @@
 import { LOCAL_STORAGE_AUTH_TOKEN_KEY, USER_ID_KEY, USER_NAME_KEY } from './constants';
+import { User } from './types';
 
 export function getAuthorizationToken() {
   return localStorage.getItem(LOCAL_STORAGE_AUTH_TOKEN_KEY);
@@ -28,7 +29,7 @@ export function getUserId() {
   return localStorage.getItem(USER_ID_KEY);
 }
 
-export function getUser() {
+export function getUser(): User {
   return {
     id: localStorage.getItem(USER_ID_KEY),
     name: localStorage.getItem(USER_NAME_KEY),

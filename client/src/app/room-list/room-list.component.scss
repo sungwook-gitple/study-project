@@ -5,6 +5,11 @@
     padding: 1rem 0;
     display: flex;
     justify-content: space-between;
+
+    &__btn-wrap {
+      display: flex;
+      gap: 0.5rem;
+    }
   }
 }
 
