@@ -1,6 +1,5 @@
 import { ChattingModel } from '@/src/db/model/chatting';
 import { validateRequired } from '@/src/util/validation/requestValidation';
-import jwt from 'jsonwebtoken';
 import { DocumentDefinition } from 'mongoose';
 import mqtt, { MqttClient } from 'mqtt';
 import { CHATTING_ERROR_TOPIC, CHATTING_TOPIC } from './constants';
@@ -30,7 +29,7 @@ export class MyMqttImpl implements MyMqtt {
 
     client.on('connect', () => {
       console.log(`chatting subscriber connected ${this.host}:${this.port}`);
-      client.subscribe(CHATTING_TOPIC);
+      client.subscribe(`${CHATTING_TOPIC}/+`);
       console.log(`subscribe topic:`, CHATTING_TOPIC);
     });
 
@@ -43,17 +42,17 @@ export class MyMqttImpl implements MyMqtt {
           return;
         }
 
-        const { token } = jsonPayload;
-        const user = jwt.decode(token);
-        if (!user || typeof user === 'string') {
-          this.publishError({
-            result: 'fail',
-            message: 'user token error'
-          });
-          return;
-        }
+        // const { token } = jsonPayload;
+        // const user = jwt.decode(token);
+        // if (!user || typeof user === 'string') {
+        //   this.publishError({
+        //     result: 'fail',
+        //     message: 'user token error'
+        //   });
+        //   return;
+        // }
 
-        const createdBy = user.id;
+        // const createdBy = user.id;
 
         const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
         if (validation.result === 'fail') {
@@ -73,10 +72,10 @@ console.log('=== validation.data.roomId', validation.data.roomId);
       } catch (e) {
         console.error(e);
         const { message } = e as Error;
-        this.publishError({
-          result: false,
-          message,
-        });
+        // this.publishError({
+        //   result: false,
+        //   message,
+        // });
       }
 
     });

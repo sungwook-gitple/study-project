@@ -6,6 +6,7 @@ import { getUser } from '../authenticated/util';
 import { requestLeaveRoom, requestRemoveRoom, requestRoomById } from '../room-list/request';
 import { CHATTING_TOPIC } from './constants';
 import { chatDummy } from './dummy';
+import { requestChats } from './request';
 import { Chat, IChatComponent } from './types';
 
 @Component({
@@ -111,9 +112,8 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
     this.subscription.unsubscribe();
   }
 
-  ngOnInit() {
+  async ngOnInit() {
 
-    // this.user.id = getUserId();
     this.user = getUser();
     if (!this.user.id) {
       throw new Error('userId does not exist');
@@ -122,6 +122,9 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
     this.route.params.subscribe(async params => {
 
       this.currentRoomId = params.id;
+
+      await this.loadChats();
+
       const result = await requestRoomById(this.currentRoomId);
 
       if (result.result !== 'success') {
@@ -138,6 +141,18 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
           this.setChat(JSON.parse(payloadStr));
         });
     });
+  }
+
+  async loadChats() {
+    console.log('== before chat');
+    const chatsResult = await requestChats(this.currentRoomId);
+    if (chatsResult.result !== 'success') {
+      console.error(chatsResult);
+      return;
+    }
+console.log('=== chatsResult.data', chatsResult.data)
+    this.chats = chatsResult.data;
+
   }
 
   setChat(chat: Chat) {

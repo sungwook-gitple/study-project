@@ -27,7 +27,7 @@ export function routeChatting() {
     });
   });
 
-  app.get('/rooms/:id/chatting', async (req, res) => {
+  app.get('/rooms/:id/chats', async (req, res) => {
 
     const roomId = req.params.id;
 

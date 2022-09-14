@@ -140,11 +140,11 @@
     "colId": "a063f710-5008-4858-9d77-4b9b38aae10e",
     "containerId": "80dc5b2c-c9cd-47f1-9acd-e57992ee8ab1",
     "name": "get chattings",
-    "url": "{{baseUrl}}/chatting",
+    "url": "{{baseUrl}}/chats",
     "method": "GET",
     "sortNum": 70000,
     "created": "2022-09-08T08:06:55.056Z",
-    "modified": "2022-09-08T08:06:55.056Z",
+    "modified": "2022-09-14T01:15:10.423Z",
     "headers": [
       {
         "name": "Authorization",
