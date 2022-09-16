@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { updateHttpAuthorization } from 'src/http/configOption';
 import { getAuthorizationToken } from '../authenticated/util';
+import { GlobalStateReducer } from '../global.state';
 import { requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
 import { Room } from './types';
 
@@ -13,12 +14,13 @@ import { Room } from './types';
 export class RoomListComponent implements OnInit {
 
   rooms: Room[];
-  currentRoomId: number;
+  currentRoomId: string;
   @Output()
   currentRoomEmitter = new EventEmitter<{ roomId: string }>();
 
   constructor(
-    private router: Router
+    private router: Router,
+    readonly globalReducer: GlobalStateReducer,
   ) { }
 
   async ngOnInit() {
@@ -50,8 +52,7 @@ export class RoomListComponent implements OnInit {
       }
     }
 
-    this.currentRoomEmitter.emit({ roomId: id });
-
+    this.globalReducer.setCurrentRoomId(id);
     this.router.navigateByUrl(`/chat/${id}`);
   }
 

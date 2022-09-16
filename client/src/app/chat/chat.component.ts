@@ -3,8 +3,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MyMqttClientImplV2 } from 'src/mqtt/mqttV2';
 import { getUser } from '../authenticated/util';
+import { GlobalStateReducer } from '../global.state';
 import { requestLeaveRoom, requestRemoveRoom, requestRoomById } from '../room-list/request';
-import { CHATTING_TOPIC } from './constants';
 import { chatDummy } from './dummy';
 import { requestChats } from './request';
 import { Chat, IChatComponent } from './types';
@@ -18,33 +18,38 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
 
   currentRoomId = '';
   roomName = '';
-
   chats: Chat[] = chatDummy;
 
   @ViewChild('message', {
     static: true
   })
   messageRef: ElementRef;
-
   user: {
     name: string;
     username?: string;
     id: string;
   };
-
   chatElement: HTMLElement;
-
   subscription: Subscription;
+  room: string;
+  userId: string;
+
+  globalStateSubscriber: Subscription;
 
   constructor(
     private readonly chattingMqttClient: MyMqttClientImplV2,
     elementRef: ElementRef,
     private readonly router: Router,
     private readonly route: ActivatedRoute,
+    private readonly globalState: GlobalStateReducer
   ) {
     this.messageRef = elementRef;
+
+    this.globalStateSubscriber = this.globalState.subscribe(state => {
+      console.log('=== state subscribe', state);
+      this.room = state.currentRoomId;
+    });
   }
-  userId: string;
 
   async handleSettingClick() {
 
@@ -150,7 +155,7 @@ export class ChatComponent implements IChatComponent, OnInit, AfterViewChecked, 
       console.error(chatsResult);
       return;
     }
-console.log('=== chatsResult.data', chatsResult.data)
+    console.log('=== chatsResult.data', chatsResult.data);
     this.chats = chatsResult.data;
 
   }
@@ -180,9 +185,11 @@ console.log('=== chatsResult.data', chatsResult.data)
       roomId: this.currentRoomId,
       isTransferred: false,
     };
-    this.chats.push(chat);
+    // this.chats.push(chat);
 
-    this.chattingMqttClient.publish(`${CHATTING_TOPIC}/${this.currentRoomId}`, chat);
+    // this.chattingMqttClient.publish(`${CHATTING_TOPIC}/${this.currentRoomId}`, chat);
+
+    this.globalState.setCurrentRoomId('a1234');
   }
 
   onKeypress(key) {

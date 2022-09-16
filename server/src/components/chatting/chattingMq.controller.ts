@@ -2,6 +2,7 @@ import { ChattingModel } from '@/src/db/model/chatting';
 import { validateRequired } from '@/src/util/validation/requestValidation';
 import { DocumentDefinition } from 'mongoose';
 import mqtt, { MqttClient } from 'mqtt';
+import { getUserByToken } from '../auth/helpers';
 import { CHATTING_ERROR_TOPIC, CHATTING_TOPIC } from './constants';
 import { Chatting, MyMqtt, MyMqttOption } from './types';
 
@@ -35,6 +36,10 @@ export class MyMqttImpl implements MyMqtt {
 
     client.on('message', async (topic, payload) => {
 
+      if (topic.includes('error')) {
+        return;
+      }
+
       try {
         const jsonPayload = JSON.parse(payload.toString());
         if (typeof jsonPayload !== 'object') {
@@ -42,9 +47,9 @@ export class MyMqttImpl implements MyMqtt {
           return;
         }
 
-        // const { token } = jsonPayload;
-        // const user = jwt.decode(token);
-        // if (!user || typeof user === 'string') {
+        const { token } = jsonPayload;
+        const user = getUserByToken(token);
+        // if (!user.id) {
         //   this.publishError({
         //     result: 'fail',
         //     message: 'user token error'
@@ -52,20 +57,20 @@ export class MyMqttImpl implements MyMqtt {
         //   return;
         // }
 
-        // const createdBy = user.id;
-
         const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
         if (validation.result === 'fail') {
           this.publishError(validation);
           console.error('required:', validation.missed);
           return;
         }
-console.log('=== validation.data.roomId', validation.data.roomId);
+
+        const createdBy = user.id || validation.data.createdBy;
+
         const chatting: DocumentDefinition<Chatting> = {
           roomId: validation.data.roomId,
           message: validation.data.message,
-          createdAt: validation.data.createdAt,
-          createdBy: validation.data.createdBy,
+          createdAt: new Date(),
+          createdBy,
         };
 
         await ChattingModel.create(chatting);

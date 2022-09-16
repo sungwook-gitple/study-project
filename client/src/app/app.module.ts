@@ -7,8 +7,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { SignInComponent } from './authenticated/signIn.component';
 import { ChatModule } from './chat/chat.module';
+import { GlobalStateReducer } from './global.state';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomCreationComponent } from './room/room-creation.component';
+import { SignUpComponent } from './user/sign-up/sign-up.component';
 
 const mqttOptions: IMqttServiceOptions = {
   host: environment.mqtt.HOST,
@@ -21,6 +23,7 @@ const mqttOptions: IMqttServiceOptions = {
     SignInComponent,
     RoomListComponent,
     RoomCreationComponent,
+    SignUpComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +32,10 @@ const mqttOptions: IMqttServiceOptions = {
     ChatModule,
     MqttModule.forRoot(mqttOptions)
   ],
-  bootstrap: [AppComponent]
+  providers: [
+    GlobalStateReducer,
+    { provide: 'initState', useValue: {}}
+  ],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}
