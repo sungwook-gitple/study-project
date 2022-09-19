@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
 import { setTheme } from 'ngx-bootstrap/utils';
 import { getAuthorizationToken, getUser } from './authenticated/util';
 
@@ -13,9 +12,7 @@ export class AppComponent implements OnInit {
 
   currentRoomId;
 
-  constructor(
-    private readonly router: Router
-  ) {
+  constructor() {
     setTheme('bs4');
   }
 
@@ -23,11 +20,6 @@ export class AppComponent implements OnInit {
     const token = getAuthorizationToken();
     const user = getUser();
 
-    if (!token || !user.id || !user.name) {
-      this.router.navigateByUrl('/sign-up');
-    }
-
-    this.router.navigateByUrl('/rooms');
   }
 
   setCurrentRoomId(event: { roomId: string }) {

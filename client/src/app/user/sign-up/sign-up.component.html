@@ -1,1 +1,46 @@
-<p>sign-up works!</p>
+<div class="sign-up card-body">
+  <h4 class="sign-up__title card-title size-xl">
+    Sign Up
+  </h4>
+  <form #f="ngForm" name="hero" (ngSubmit)="handleSubmit($event)">
+    <div class="form-group">
+      <label for="email">email:</label>
+      <input class="form-control"
+        type="email"
+        email
+        name="email"
+        #email="ngModel"
+        [(ngModel)]="f.email"
+      >
+      {{email.errors?.email && 'email 오류'}}
+    </div>
+    <div class="form-group">
+      <label>password</label>
+      <input class="form-control"
+        required
+        type="password"
+        name="password"
+        [(ngModel)]="password"
+      >
+    </div>
+    <div class="form-group">
+      <label>password confirm</label>
+      <input class="form-control"
+        required
+        type="password"
+        name="passwordConfirm"
+        [(ngModel)]="passwordConfirm"
+      >
+      {{isPasswordConfirmed}}
+    </div>
+    <div class="sign-up__btn-wrap">
+      <button class="btn btn-primary w-100"
+        type="submit"
+      >Sign Up</button>
+    </div>
+  </form>
+  <div class="sign-up__link text-end">
+    <span>Already have an account?</span>
+    <a routerLink="/sign-in">Sign In</a>
+  </div>
+</div>

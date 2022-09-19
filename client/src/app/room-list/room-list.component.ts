@@ -2,7 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { updateHttpAuthorization } from 'src/http/configOption';
 import { getAuthorizationToken } from '../authenticated/util';
-import { GlobalStateReducer } from '../global.state';
+import { GlobalStateService } from '../global.state';
 import { requestEnterRoom, requestLeaveRoom, requestRoomList } from './request';
 import { Room } from './types';
 
@@ -20,7 +20,7 @@ export class RoomListComponent implements OnInit {
 
   constructor(
     private router: Router,
-    readonly globalReducer: GlobalStateReducer,
+    readonly globalReducer: GlobalStateService,
   ) { }
 
   async ngOnInit() {

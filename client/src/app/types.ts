@@ -8,4 +8,5 @@ export interface ISignUp {
 
 export interface GlobalState {
   currentRoomId?: string;
+  isUnauthorized?: boolean;
 }
