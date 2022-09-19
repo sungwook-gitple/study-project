@@ -1,4 +1,5 @@
 .sign-up {
+  min-width: 18.875rem;
   &__title {
     text-align: center;
   }
@@ -9,5 +10,10 @@
   &__link {
     padding: 1rem 0;
     text-align: end;
+  }
+}
+.password-confirm {
+  &__validation {
+    color: rgba(213, 18, 18, 0.818);
   }
 }

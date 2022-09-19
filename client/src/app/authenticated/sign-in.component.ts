@@ -6,10 +6,10 @@ import { setAuthorizationData } from './util';
 
 @Component({
   selector: 'app-sign-in',
-  templateUrl: './signIn.component.html',
+  templateUrl: './sign-in.component.html',
   styleUrls: ['./authenticated.component.scss']
 })
-export class SignInComponent implements OnInit {
+export class SignInComponent {
 
   @ViewChild('username', { static: true })
   usernameElm: ElementRef;
@@ -19,11 +19,7 @@ export class SignInComponent implements OnInit {
   constructor(
     private readonly http: HttpClient,
     private readonly router: Router
-  ) {
-
-  }
-
-  ngOnInit() {}
+  ) { }
 
   async handleInput(event: KeyboardEvent) {
     if (event.code === 'Enter') {

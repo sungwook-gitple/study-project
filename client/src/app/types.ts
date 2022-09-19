@@ -1,8 +1,8 @@
-import { ServerResponse } from 'http';
-import { User } from './authenticated/types';
+import { ServerResponse } from 'src/http/types';
+import { SignUpRequest } from './user/sign-up/type';
 
 export interface ISignUp {
-  signUp(user: User): Promise<ServerResponse>;
+  signUp(user: SignUpRequest): Promise<ServerResponse>;
   gotoSignIn(): void;
 }
 

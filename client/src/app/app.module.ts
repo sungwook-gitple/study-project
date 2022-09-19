@@ -6,7 +6,7 @@ import { IMqttServiceOptions, MqttModule } from 'ngx-mqtt';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { SignInComponent } from './authenticated/signIn.component';
+import { SignInComponent } from './authenticated/sign-in.component';
 import { ChatModule } from './chat/chat.module';
 import { GlobalErrorHandler } from './common/globalErrorHandler';
 import { GlobalStateService } from './global.state';

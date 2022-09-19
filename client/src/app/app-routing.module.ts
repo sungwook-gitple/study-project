@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SignInComponent } from './authenticated/signIn.component';
+import { SignInComponent } from './authenticated/sign-in.component';
 import { ChatComponent } from './chat/chat.component';
 import { AuthGuard } from './guard/authGuard';
 import { RoomListComponent } from './room-list/room-list.component';

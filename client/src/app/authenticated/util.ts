@@ -7,7 +7,6 @@ export function getAuthorizationToken() {
 
 export async function setAuthorizationToken(token: string) {
   localStorage.setItem(LOCAL_STORAGE_AUTH_TOKEN_KEY, token);
-  // await updateHttpAuthorization(token)
 }
 
 export async function setAuthorizationData({
@@ -29,9 +28,19 @@ export function getUserId() {
   return localStorage.getItem(USER_ID_KEY);
 }
 
+export function getUserName() {
+  return localStorage.getItem(USER_ID_KEY);
+}
+
 export function getUser(): User {
   return {
-    id: localStorage.getItem(USER_ID_KEY),
-    name: localStorage.getItem(USER_NAME_KEY),
+    id: getUserId(),
+    name: getUserName(),
   };
+}
+
+export function hasBeenAuthorized() {
+  return getAuthorizationToken()
+    && getUserId()
+    && getUserName();
 }

@@ -22,6 +22,7 @@ export function routeAuth() {
 
         res.status(StatusCodes.UNAUTHORIZED)
           .json(({
+            result: 'fail',
             message: ReasonPhrases.UNAUTHORIZED
           }));
 
@@ -33,6 +34,7 @@ export function routeAuth() {
 
         res.status(StatusCodes.INTERNAL_SERVER_ERROR)
           .json(({
+            result: 'fail',
             message: ReasonPhrases.INTERNAL_SERVER_ERROR
           }));
 
@@ -43,7 +45,7 @@ export function routeAuth() {
       const token = createAuthenticationToken(name, username);
 
       res.json({
-        message: 'success',
+        result: 'success',
         token,
         userId: user.id,
         name: user.name,
@@ -63,6 +65,7 @@ export function routeAuth() {
     if (validation.result !== 'success') {
       res.status(StatusCodes.BAD_REQUEST)
         .json({
+          result: 'fail',
           message: validation.message,
           data: validation.data
         });
@@ -75,15 +78,25 @@ export function routeAuth() {
 
       await signUp(name, username, password);
       res.json({
-        message: 'success'
+        result: 'success'
       });
 
       return;
     } catch (e) {
       console.error(e);
-      res.status(StatusCodes.UNPROCESSABLE_ENTITY)
+      if (!(e instanceof Error)) {
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .json({
+            result: 'fail',
+            message: ReasonPhrases.INTERNAL_SERVER_ERROR,
+            data: e
+          });
+        return;
+      }
+      res.status(StatusCodes.UNAUTHORIZED)
         .json({
-          message: 'fail'
+          result: 'fail',
+          message: e.message || ReasonPhrases.INTERNAL_SERVER_ERROR
         });
     }
   });
