@@ -6,8 +6,8 @@ export const environment = {
   production: false,
   mqtt: {
     HOST: '127.0.0.1',
-    PORT: 1883,
-    WS_PORT: 3000
+    PORT: 3001,
+    WS_PORT: 8888
   }
 };
 
