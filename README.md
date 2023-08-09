@@ -1,4 +1,5 @@
 # study-project
+회사에서 요구한 스펙으로 구현
 
 ### SPEC
 
@@ -7,6 +8,7 @@ YARN 1.22.10
 MONGODB 4.2  
 mongoose 5.5.23  
 node-restful 0.2.6
+angular 8
 
 ### INSTALL
 
