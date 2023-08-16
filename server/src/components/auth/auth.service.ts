@@ -21,7 +21,7 @@ export async function signUp(name: string, username: string, password: string) {
   return user.toJSON();
 }
 
-export function createAuthenticationToken(name: string, username: string) {
+export function createAuthenticationToken({ name, username }: { name: string, username: string }) {
 
   return jwt.sign(
     { name, username },

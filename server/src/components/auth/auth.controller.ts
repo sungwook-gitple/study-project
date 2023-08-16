@@ -1,11 +1,14 @@
 import { Request } from 'express';
+import * as core from 'express-serve-static-core';
 import { ReasonPhrases, StatusCodes } from 'http-status-codes';
-import app from '../../app';
-import { User, UserModel } from '../../db/model/user';
+import { User, UserModel } from '@/src/db/model/user';
 import { checkRequired } from '../../util/validation/requestValidation';
-import { createAuthenticationToken, signUp } from './auth.service';
+import { signUp } from './auth.service';
+import { AuthenticateService } from '@/src/models/auth/authenticateService';
 
-export function routeAuth() {
+export function routeAuth(app: core.Express, { authenticateService }: {
+  authenticateService: AuthenticateService
+}) {
 
   app.post('/signIn', async (req, res) => {
 
@@ -13,48 +16,52 @@ export function routeAuth() {
 
       const { name, username, password } = req.body;
 
-      const result = await UserModel.find({
-        username,
-        password,
-      });
+      const result = await authenticateService.authenticate(username, password);
 
-      if (result.length === 0) {
-
+      if ('error' in result) {
+        console.warn('회원 정보에 문제가 있습니다.');
         res.status(StatusCodes.UNAUTHORIZED)
           .json(({
             message: ReasonPhrases.UNAUTHORIZED
           }));
-
-        return;
-      }
-      if (result.length > 1) {
-
-        console.error('회원 정보에 문제가 있습니다.');
-
-        res.status(StatusCodes.INTERNAL_SERVER_ERROR)
-          .json(({
-            message: ReasonPhrases.INTERNAL_SERVER_ERROR
-          }));
-
         return;
       }
 
-      const user = result[0];
-      const token = createAuthenticationToken(name, username);
+      const { user, token } = result;
+      res.cookie('token', token)
 
       res.json({
         message: 'success',
         token,
-        userId: user.id,
+        username: user.username,
         name: user.name,
       });
     } catch (e) {
+      console.error(`/signIn params:`, req.body, e);
       res.status(StatusCodes.INTERNAL_SERVER_ERROR)
         .json({
           message: ReasonPhrases.INTERNAL_SERVER_ERROR,
           data: e
         });
     }
+  });
+
+  app.delete('/signOut', async (req, res) => {
+    const cookies = req.cookies;
+
+    if (!cookies?.token) {
+      res.status(StatusCodes.UNPROCESSABLE_ENTITY)
+        .json({
+          message: 'does not exist login information'
+        });
+
+      return;
+    }
+
+    res.clearCookie('token')
+    res.json({
+      message: 'success'
+    });
   });
 
   app.post('/signUp', async (req: Request<User>, res) => {
@@ -87,4 +94,17 @@ export function routeAuth() {
         });
     }
   });
+
+  app.get('/authCheck', async (req, res) => {
+    if (!req.cookies?.token) {
+      res.json({
+        message: 'fail'
+      });
+      return;
+    }
+
+    res.json({
+      message: 'success'
+    })
+  })
 }
