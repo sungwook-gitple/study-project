@@ -1,3 +1,4 @@
+import app from './app';
 import { configPassport } from './components/auth/passport';
 import { chattingMqtt } from './components/chatting';
 import { loadDb } from './loader/loadDb';
@@ -8,7 +9,7 @@ async function startServer () {
 
   await loadDb();
   configPassport();
-  registerRouter();
+  registerRouter(app);
 
   await loadServer();
   chattingMqtt.connect();

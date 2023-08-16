@@ -1,4 +1,5 @@
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import morgan from 'morgan';
 import passport from 'passport';
@@ -9,6 +10,7 @@ app.use(morgan('dev'));
 app.use(cors(config.server.cors));
 app.use(express.urlencoded({ extended : true }));
 app.use(express.json());
-app.use(passport.initialize());
+app.use(cookieParser());
+// app.use(passport.initialize());
 
 export default app;
