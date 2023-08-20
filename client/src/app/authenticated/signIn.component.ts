@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { requestSignIn } from './request';
+import { requestSignIn, requestSignOut } from './request';
 import { setAuthorizationData } from './util';
 
 @Component({
@@ -50,5 +50,14 @@ export class SignInComponent implements OnInit {
       name: result.name,
     });
     this.router.navigateByUrl('/rooms');
+  }
+
+  async signOut() {
+    const result = await requestSignOut();
+    if ('error' in result) {
+      alert('로그아웃에 실패했습니다.');
+      return;
+    }
+    this.router.navigateByUrl('/signIn');
   }
 }
