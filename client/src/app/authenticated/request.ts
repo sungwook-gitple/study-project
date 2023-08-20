@@ -1,12 +1,6 @@
 import { http } from 'src/http';
 import { SignInResponse } from './types';
 
-// console.log('=== ngOnInit', this.http.post)
-// const req = await this.http.post('http://localhost:3000/signIn', {})
-// console.log('== result', req)
-// req.subscribe();
-// console.log('== result2', req)
-
 export async function requestSignIn(username: string, password: string) {
   const signInData = await http.post<SignInResponse>(
     '/signIn',
@@ -23,4 +17,20 @@ export async function requestSignIn(username: string, password: string) {
   }
 
   return signInData;
+}
+
+export async function requestSignOut() {
+  const result = await http.delete(
+    '/signOut',
+    {}
+  ).then(r => r.data)
+    .catch(e => {
+      console.error(e);
+      return {
+        error: e,
+        message: e.message
+      }
+    });
+
+  return result;
 }
