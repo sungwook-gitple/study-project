@@ -4,13 +4,17 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha --require ts-node/register --require tsconfig-paths/register --exit ./test/**/*.spec.ts",
     "start": "node ./dist/main.js",
     "dev": "nodemon --require tsconfig-paths/register --files ./src/main.ts",
     "build": "tsc"
   },
   "dependencies": {
+    "@types/cookie-parser": "^1.4.3",
+    "@types/supertest": "^2.0.12",
     "axios": "^0.27.2",
+    "chai": "^4.3.7",
+    "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
     "dotenv": "^8.6.0",
     "express": "^4.18.1",
@@ -23,17 +27,22 @@
     "node-restful": "^0.2.6",
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "sinon": "^15.2.0"
   },
   "devDependencies": {
+    "@types/chai": "^4.3.5",
     "@types/cors": "^2.8.12",
     "@types/express": "^4.17.13",
+    "@types/mocha": "^10.0.1",
     "@types/morgan": "^1.9.3",
     "@types/passport-jwt": "^3.0.6",
     "@types/passport-local": "^1.0.34",
+    "mocha": "^10.2.0",
     "nodemon": "^2.0.19",
+    "supertest": "^6.3.3",
     "ts-node": "8.10.2",
-    "tsconfig-paths": "^4.1.0",
+    "tsconfig-paths": "^4.2.0",
     "tslint": "^6.1.3",
     "typescript": "3.9"
   },

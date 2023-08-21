@@ -38,21 +38,9 @@ export class MyMqttImpl implements MyMqtt {
       try {
         const jsonPayload = JSON.parse(payload.toString());
         if (typeof jsonPayload !== 'object') {
-          console.error('object error');
+          console.error('not supported payload type');
           return;
         }
-
-        // const { token } = jsonPayload;
-        // const user = jwt.decode(token);
-        // if (!user || typeof user === 'string') {
-        //   this.publishError({
-        //     result: 'fail',
-        //     message: 'user token error'
-        //   });
-        //   return;
-        // }
-
-        // const createdBy = user.id;
 
         const validation = validateRequired<Chatting>(jsonPayload, ['createdAt', 'createdBy', 'message']);
         if (validation.result === 'fail') {
@@ -60,7 +48,7 @@ export class MyMqttImpl implements MyMqtt {
           console.error('required:', validation.missed);
           return;
         }
-console.log('=== validation.data.roomId', validation.data.roomId);
+
         const chatting: DocumentDefinition<Chatting> = {
           roomId: validation.data.roomId,
           message: validation.data.message,
@@ -71,11 +59,6 @@ console.log('=== validation.data.roomId', validation.data.roomId);
         await ChattingModel.create(chatting);
       } catch (e) {
         console.error(e);
-        const { message } = e as Error;
-        // this.publishError({
-        //   result: false,
-        //   message,
-        // });
       }
 
     });

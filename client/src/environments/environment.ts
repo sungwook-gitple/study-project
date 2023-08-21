@@ -1,13 +1,17 @@
 // This file can be replaced during build by using the `fileReplacements` array.
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
-
+2
 export const environment = {
   production: false,
+  server: {
+    HOST: 'localhost',
+    PORT: 8000
+  },
   mqtt: {
     HOST: '127.0.0.1',
     PORT: 1883,
-    WS_PORT: 3000
+    WS_PORT: 3999
   }
 };
 

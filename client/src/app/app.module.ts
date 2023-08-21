@@ -9,6 +9,7 @@ import { SignInComponent } from './authenticated/signIn.component';
 import { ChatModule } from './chat/chat.module';
 import { RoomListComponent } from './room-list/room-list.component';
 import { RoomCreationComponent } from './room/room-creation.component';
+import { TopBarComponent } from './components/top.component';
 
 const mqttOptions: IMqttServiceOptions = {
   host: environment.mqtt.HOST,
@@ -18,9 +19,10 @@ const mqttOptions: IMqttServiceOptions = {
 @NgModule({
   declarations: [
     AppComponent,
-    SignInComponent,
     RoomListComponent,
     RoomCreationComponent,
+    SignInComponent,
+    TopBarComponent,
   ],
   imports: [
     BrowserModule,
