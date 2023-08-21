@@ -9,9 +9,9 @@ export interface ChattingSchema {
 }
 
 export const chattingSchema = new Schema<ChattingSchema, {}, {}>({
-  roomId: String,
+  roomId: Schema.Types.ObjectId,
   message: String,
-  createdBy: String,
+  createdBy: Schema.Types.ObjectId,
   createdAt: String,
 });
 

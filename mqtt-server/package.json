@@ -1,0 +1,18 @@
+{
+  "name": "mqtt-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "aedes -c config/aedes.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "aedes": "^0.44.0",
+    "dotenv": "^16.3.1",
+    "websocket-stream": "^5.5.2"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

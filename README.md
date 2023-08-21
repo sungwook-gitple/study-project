@@ -28,3 +28,12 @@ angular 8
     ```shell
       mongo
     ```
+- AEDES
+  - 참조
+    ```shell
+      https://github.com/moscajs/aedes-cli
+    ```
+  - run
+    ```shell
+      aedes -c mqtt-server/config/aedes.js
+    ```
